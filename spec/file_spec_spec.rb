@@ -118,4 +118,17 @@ RSpec.describe FileSpec do
       expect("foo").to have_entries(%w[bar.txt bar/buzz.txt .gitignore])
     end
   end
+
+  describe "#be_executable" do
+    it "matches an executable" do
+      write "foo"
+      FileUtils.chmod "+x", "foo"
+      expect("foo").to be_executable
+    end
+
+    it "does not match a regular file" do
+      write "foo"
+      expect("foo").not_to be_executable
+    end
+  end
 end
