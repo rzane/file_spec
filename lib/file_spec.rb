@@ -83,14 +83,13 @@ module FileSpec
     # @param path [String,Pathname] the path to observe
     # @param opts [Hash] additional options passed to {#diff}
     def record_changes(path, **opts)
-      basename = File.basename(path)
       tmp_path = Dir.mktmpdir("file_spec")
-      before_path = File.join(tmp_path, "before", basename)
-      after_path = File.join(tmp_path, "after", basename)
+      before_path = File.join(tmp_path, "before")
+      after_path = File.join(tmp_path, "after")
 
-      unless File.directory?(path)
-        mkdir File.dirname(before_path)
-        mkdir File.dirname(after_path)
+      if File.file?(path)
+        mkdir before_path
+        mkdir after_path
       end
 
       FileUtils.cp_r(path, before_path)

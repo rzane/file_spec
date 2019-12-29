@@ -38,10 +38,28 @@ RSpec.describe FileSpec do
   end
 
   describe "#record_changes" do
-    it "generates a diff" do
+    it "records changes to a file" do
       write "example/file.txt", "hello"
 
       diff = record_changes "example/file.txt" do
+        write "example/file.txt", "goodbye"
+      end
+
+      expect(diff).to eq(<<~DIFF)
+        --- before/file.txt
+        +++ after/file.txt
+        @@ -1 +1 @@
+        -hello
+        \\ No newline at end of file
+        +goodbye
+        \\ No newline at end of file
+      DIFF
+    end
+
+    it "records changes to a directory" do
+      write "example/file.txt", "hello"
+
+      diff = record_changes "example" do
         write "example/file.txt", "goodbye"
       end
 
