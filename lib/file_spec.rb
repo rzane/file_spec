@@ -84,22 +84,22 @@ module FileSpec
     # @param opts [Hash] additional options passed to {#diff}
     def record_changes(path, **opts)
       basename = File.basename(path)
+      tmp_path = Dir.mktmpdir("file_spec")
+      before_path = File.join(tmp_path, "before", basename)
+      after_path = File.join(tmp_path, "after", basename)
 
-      Dir.mktmpdir do |tmp|
-        before = File.join(tmp, "before", basename)
-        after = File.join(tmp, "after", basename)
-
-        unless File.directory?(path)
-          mkdir File.dirname(before)
-          mkdir File.dirname(after)
-        end
-
-        FileUtils.cp_r(path, before)
-        yield
-        FileUtils.cp_r(path, after)
-
-        diff("before", "after", chdir: tmp, **opts)
+      unless File.directory?(path)
+        mkdir File.dirname(before_path)
+        mkdir File.dirname(after_path)
       end
+
+      FileUtils.cp_r(path, before_path)
+      yield
+      FileUtils.cp_r(path, after_path)
+
+      diff("before", "after", chdir: tmp_path, **opts)
+    ensure
+      FileUtils.rm_rf(tmp_path)
     end
   end
 
