@@ -46,8 +46,8 @@ RSpec.describe FileSpec do
       end
 
       expect(diff).to eq(<<~DIFF)
-        --- before/file.txt
-        +++ after/file.txt
+        --- a/file.txt
+        +++ b/file.txt
         @@ -1 +1 @@
         -hello
         \\ No newline at end of file
@@ -64,8 +64,8 @@ RSpec.describe FileSpec do
       end
 
       expect(diff).to eq(<<~DIFF)
-        --- before/file.txt
-        +++ after/file.txt
+        --- a/file.txt
+        +++ b/file.txt
         @@ -1 +1 @@
         -hello
         \\ No newline at end of file
